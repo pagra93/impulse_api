@@ -12,11 +12,31 @@ import { v4 as uuidv4 } from 'uuid';
 // ═══════════════════════════════════════════════════════════════════════════
 
 export function generateAccessToken(payload: JwtPayload): string {
+  // Convertir expiresIn string a segundos si es necesario
+  const expiresIn = parseExpiresIn(env.JWT_EXPIRES_IN);
+  
   return jwt.sign(
     { userId: payload.userId, email: payload.email },
     env.JWT_SECRET,
-    { expiresIn: env.JWT_EXPIRES_IN }
+    { expiresIn }
   );
+}
+
+// Helper para convertir "15m", "7d" a segundos
+function parseExpiresIn(value: string): number {
+  const match = value.match(/^(\d+)([smhd])$/);
+  if (!match) return 900; // Default 15 minutos
+  
+  const num = parseInt(match[1], 10);
+  const unit = match[2];
+  
+  switch (unit) {
+    case 's': return num;
+    case 'm': return num * 60;
+    case 'h': return num * 60 * 60;
+    case 'd': return num * 60 * 60 * 24;
+    default: return 900;
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -35,14 +35,14 @@ pool.on('error', (err) => {
 // HELPER PARA QUERIES
 // ═══════════════════════════════════════════════════════════════════════════
 
-export async function query<T = any>(
+export async function query(
   text: string, 
   params?: any[]
-): Promise<QueryResult<T>> {
+): Promise<QueryResult<any>> {
   const start = Date.now();
   
   try {
-    const result = await pool.query<T>(text, params);
+    const result = await pool.query(text, params);
     
     if (env.isDevelopment) {
       const duration = Date.now() - start;
