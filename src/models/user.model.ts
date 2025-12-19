@@ -16,14 +16,14 @@ export async function createUser(input: RegisterInput): Promise<User> {
   // Hash de la contraseña
   const password_hash = await hashPassword(password);
   
-  const result = await query<User>(
+  const result = await query(
     `INSERT INTO users (email, password_hash, display_name)
      VALUES ($1, $2, $3)
      RETURNING *`,
     [email.toLowerCase(), password_hash, display_name || null]
   );
   
-  return result.rows[0];
+  return result.rows[0] as User;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -31,12 +31,12 @@ export async function createUser(input: RegisterInput): Promise<User> {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export async function findUserByEmail(email: string): Promise<User | null> {
-  const result = await query<User>(
+  const result = await query(
     `SELECT * FROM users WHERE email = $1`,
     [email.toLowerCase()]
   );
   
-  return result.rows[0] || null;
+  return (result.rows[0] as User) || null;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -44,12 +44,12 @@ export async function findUserByEmail(email: string): Promise<User | null> {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export async function findUserById(id: string): Promise<User | null> {
-  const result = await query<User>(
+  const result = await query(
     `SELECT * FROM users WHERE id = $1`,
     [id]
   );
   
-  return result.rows[0] || null;
+  return (result.rows[0] as User) || null;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

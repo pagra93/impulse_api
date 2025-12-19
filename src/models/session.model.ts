@@ -21,7 +21,7 @@ export async function createSession(
   const refreshTokenHash = hashToken(refreshToken);
   const expiresAt = getRefreshTokenExpiry();
   
-  const result = await query<Session>(
+  const result = await query(
     `INSERT INTO user_sessions 
      (user_id, refresh_token_hash, device_info, extension_version, expires_at, ip_address)
      VALUES ($1, $2, $3, $4, $5, $6)
@@ -36,7 +36,7 @@ export async function createSession(
     ]
   );
   
-  return result.rows[0];
+  return result.rows[0] as Session;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -48,7 +48,7 @@ export async function findSessionByRefreshToken(
 ): Promise<Session | null> {
   const refreshTokenHash = hashToken(refreshToken);
   
-  const result = await query<Session>(
+  const result = await query(
     `SELECT * FROM user_sessions 
      WHERE refresh_token_hash = $1 
      AND is_revoked = FALSE 
@@ -56,7 +56,7 @@ export async function findSessionByRefreshToken(
     [refreshTokenHash]
   );
   
-  return result.rows[0] || null;
+  return (result.rows[0] as Session) || null;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
