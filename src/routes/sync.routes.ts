@@ -1,31 +1,22 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// ROUTER PRINCIPAL
+// RUTAS DE SINCRONIZACIÓN
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { Router } from 'express';
-import authRoutes from './auth.routes';
-import syncRoutes from './sync.routes';
+import { requireAuth } from '../middleware/auth.middleware';
+import * as syncController from '../controllers/sync.controller';
 
 const router = Router();
 
 // ═══════════════════════════════════════════════════════════════════════════
-// MONTAR RUTAS
+// RUTAS (todas requieren autenticación)
 // ═══════════════════════════════════════════════════════════════════════════
 
-router.use('/auth', authRoutes);
-router.use('/sync', syncRoutes);
+// GET /api/sync/pull - Obtener configuración del servidor
+router.get('/pull', requireAuth, syncController.pull);
 
-// ═══════════════════════════════════════════════════════════════════════════
-// HEALTH CHECK
-// ═══════════════════════════════════════════════════════════════════════════
-
-router.get('/health', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Impulse API is running',
-    timestamp: new Date().toISOString(),
-  });
-});
+// POST /api/sync/push - Subir configuración al servidor
+router.post('/push', requireAuth, syncController.push);
 
 export default router;
 
