@@ -171,12 +171,46 @@ export interface SquadTemplate {
   createdAt: string;
   rules: RuleTemplate[];
   mockStats: SquadStats;
+  // Phase 2 fields
+  ownerId: string | null;
+  ownerDisplayName: string | null;
+  visibility: string;
+  inviteCode: string | null;
 }
 
 export interface SquadMembership {
   squadTemplateId: string;
   joinedAt: number;
   status: 'active' | 'left';
+  role: 'owner' | 'member';
+}
+
+export interface CreateSquadInput {
+  name: string;
+  description?: string;
+  emoji?: string;
+  category?: string;
+  visibility?: string;
+  rules: CreateRuleInput[];
+}
+
+export interface CreateRuleInput {
+  type: string;
+  name: string;
+  schedule?: Record<string, any>;
+  appliesTo?: string;
+  apps?: Record<string, any>;
+  limitConfig?: Record<string, any>;
+  enforcementLevel?: string;
+  difficulty?: string;
+  exceptions?: Record<string, any>;
+}
+
+export interface SquadMember {
+  userId: string;
+  displayName: string;
+  role: 'owner' | 'member';
+  progress: SquadProgress;
 }
 
 export interface WeeklyMedal {
