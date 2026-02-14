@@ -138,6 +138,70 @@ export interface ImpulseControl {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// SQUADS
+// ═══════════════════════════════════════════════════════════════════════════
+
+export interface RuleTemplate {
+  id: string;
+  squadTemplateId: string;
+  type: string;
+  name: string;
+  schedule: Record<string, any> | null;
+  appliesTo: string | null;
+  apps: Record<string, any> | null;
+  limitConfig: Record<string, any> | null;
+  enforcementLevel: string | null;
+  difficulty: string | null;
+  exceptions: Record<string, any> | null;
+}
+
+export interface SquadStats {
+  memberCount: number;
+  cleanDayPercentage: number;
+  averageStreak: number;
+}
+
+export interface SquadTemplate {
+  id: string;
+  name: string;
+  description: string | null;
+  emoji: string | null;
+  category: string | null;
+  createdBy: string | null;
+  createdAt: string;
+  rules: RuleTemplate[];
+  mockStats: SquadStats;
+}
+
+export interface SquadMembership {
+  squadTemplateId: string;
+  joinedAt: number;
+  status: 'active' | 'left';
+}
+
+export interface WeeklyMedal {
+  day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
+  date: string;
+  status: 'clean' | 'broken' | 'future';
+}
+
+export interface SquadProgress {
+  todayUnlocks: number;
+  isCleanToday: boolean;
+  currentStreak: number;
+  longestStreak: number;
+  weeklyMedals: WeeklyMedal[];
+}
+
+export interface SquadEventInput {
+  squadTemplateId: string;
+  ruleId: string;
+  type: 'DISABLED';
+  timestamp: number;
+  date: string;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // API RESPONSES
 // ═══════════════════════════════════════════════════════════════════════════
 export interface ApiResponse<T = any> {

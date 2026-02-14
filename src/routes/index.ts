@@ -5,6 +5,7 @@
 import { Router } from 'express';
 import authRoutes from './auth.routes';
 import syncRoutes from './sync.routes';
+import squadRoutes from './squad.routes';
 
 const router = Router();
 
@@ -14,6 +15,7 @@ const router = Router();
 
 router.use('/auth', authRoutes);
 router.use('/sync', syncRoutes);
+router.use('/squads', squadRoutes);
 
 // ═══════════════════════════════════════════════════════════════════════════
 // HEALTH CHECK
