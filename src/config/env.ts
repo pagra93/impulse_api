@@ -23,7 +23,11 @@ export const env = {
   JWT_SECRET: process.env.JWT_SECRET || 'default-secret-change-in-production',
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '15m',
   JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN || '365d',
-  
+
+  // Supabase — para validar el JWT de Supabase (login único). Host público.
+  SUPABASE_URL:
+    process.env.SUPABASE_URL || 'https://qsuzixmislcfmraskuzs.supabase.co',
+
   // CORS
   CORS_ORIGIN: process.env.CORS_ORIGIN || '*',
   

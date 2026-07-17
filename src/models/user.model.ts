@@ -86,7 +86,50 @@ export async function emailExists(email: string): Promise<boolean> {
     `SELECT 1 FROM users WHERE email = $1 LIMIT 1`,
     [email.toLowerCase()]
   );
-  
+
   return result.rowCount !== null && result.rowCount > 0;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// LOGIN ÚNICO (Supabase) — buscar / enlazar / crear por auth.users.id
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Buscar por el id de Supabase Auth (auth.users.id) enlazado.
+export async function findUserByAuthUserId(
+  authUserId: string
+): Promise<User | null> {
+  const result = await query(
+    `SELECT * FROM users WHERE auth_user_id = $1`,
+    [authUserId]
+  );
+
+  return (result.rows[0] as User) || null;
+}
+
+// Enlazar un usuario existente (encontrado por email) con su cuenta Supabase.
+export async function linkAuthUser(
+  userId: string,
+  authUserId: string
+): Promise<void> {
+  await query(
+    `UPDATE users SET auth_user_id = $1, updated_at = NOW() WHERE id = $2`,
+    [authUserId, userId]
+  );
+}
+
+// Crear un usuario de la extensión a partir de una cuenta de Supabase Auth
+// (alta desde la extensión/app: la contraseña vive en Supabase, aquí NULL).
+export async function createUserFromAuth(
+  authUserId: string,
+  email: string
+): Promise<User> {
+  const result = await query(
+    `INSERT INTO users (email, auth_user_id, is_email_verified)
+     VALUES ($1, $2, TRUE)
+     RETURNING *`,
+    [email.toLowerCase(), authUserId]
+  );
+
+  return result.rows[0] as User;
 }
 
